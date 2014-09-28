@@ -9,7 +9,7 @@ import Foundation
 import SpriteKit
 
 let THRESHOLD: CGFloat = 10.0
-let BLOCK_THRESHOLD = 15.0
+let BLOCK_THRESHOLD: CGFloat = 15.0
 let MODIFIER = 0.5
 let GOAL_POSITION = CGPoint(x: -1.0, y: -1.0)
 
@@ -46,8 +46,13 @@ class Player {
   private var actionQueue: Array<Action> = []
   
   init(id: Int) {
-    self.sprite = SKShapeNode()
+    self.sprite = SKShapeNode(circleOfRadius: 15)
     self.id = id
+    if (self.id % 2 == 0) {
+      self.sprite.fillColor = SKColor.blueColor()
+    } else {
+      self.sprite.fillColor = SKColor.redColor()
+    }
   }
   
   func distanceBetween(to: CGPoint, from: CGPoint) -> CGFloat {
@@ -67,14 +72,16 @@ class Player {
   }
   
   func respond(currentTime: CFTimeInterval, ball: Ball, players: Array<Player>) {
+    let distanceToBall = distanceBetween(ball.sprite.position, from: sprite.position)
+
     // If I have the ball - do the attacking action
     if (ball.possessedBy == self.id) {
-      ball.kick(self.power, currentAction.endPosition)
+      //ball.kick(self.power, currentAction.endPosition)
     } else if (ball.shotBy % 2 != self.id % 2) {
       // modifyt the direction vector to run toward the ball
       if (distanceToBall < BLOCK_THRESHOLD) {
-        velocity.x += (ball.position.x - sprite.position.x) * speed
-        velocity.y += (ball.position.y - sprite.position.y) * speed
+        velocity.dx += (ball.sprite.position.x - sprite.position.x) * speed
+        velocity.dy += (ball.sprite.position.y - sprite.position.y) * speed
       }
     } else if (ball.possessedBy % 2 == self.id % 2) {
       // our team has the ball - run toward the goal?
@@ -84,38 +91,37 @@ class Player {
       let opponentPosition = players[opponentId].getPosition()
       
       velocity.dx += (opponentPosition.x - sprite.position.x) * speed
-      velocity.dy += (opponentPosition.y - sprite.position.Y) * speed
+      velocity.dy += (opponentPosition.y - sprite.position.y) * speed
     }
   }
   
   // Global run method to do the simulation of the player
   func update(currentTime: CFTimeInterval, ball: Ball, players: Array<Player>) {
-    let distanceToBall = distanceBetween(ball.position, from: sprite.position)
-    
     // If previous action is not done yet
     if let currentAction = mCurrentAction {
       let distanceToAction = distanceBetween(currentAction.endPositiion, from: sprite.position)
       
       switch currentAction.actionType {
       case .Pass:
-        ball.kick(self.power, currentAction.endPositiion)
+        ball.kick(self.power, target:currentAction.endPositiion)
         mCurrentAction = nil
       case .Shoot:
-        ball.kick(self.power, currentAction.endPositiion)
+        ball.kick(self.power, target:currentAction.endPositiion)
         mCurrentAction = nil
       case .Path:
         if (distanceToAction < THRESHOLD) {
           mCurrentAction = nil
-        } else { // Move toward the ball
+        } else { // Move toward the end position
           velocity.dx += (currentAction.endPositiion.x - sprite.position.x) * speed
           velocity.dy += (currentAction.endPositiion.y - sprite.position.y) * speed
         }
       }
     } else if (actionQueue.count != 0) {
       mCurrentAction = actionQueue.first
-    } else {
-      self.respond(currentTime, ball, players)
+      actionQueue.removeAtIndex(0)
     }
+
+    self.respond(currentTime, ball:ball, players:players)
     
     sprite.position.x += velocity.dx
     sprite.position.y += velocity.dy

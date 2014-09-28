@@ -4,18 +4,24 @@ import Darwin
 class Ball {
 
   var sprite:SKShapeNode
+  var possessedBy:Int
+  var shotBy:Int
 
   init() {
-    let foo:CGFloat = 5
-    sprite = SKShapeNode(circleOfRadius: foo)
+    let r:CGFloat = 5
+    sprite = SKShapeNode(circleOfRadius: r)
     sprite.fillColor = SKColor.blueColor()
 
-    let physicsBody = SKPhysicsBody(circleOfRadius: foo)
+    let physicsBody = SKPhysicsBody(circleOfRadius: r)
     physicsBody.mass = 1
     physicsBody.affectedByGravity = false
     physicsBody.linearDamping = 0.5
 
     sprite.physicsBody = physicsBody
+
+    // TODO this is fake
+    possessedBy = 0
+    shotBy = 0
   }
 
   func kick(power:Int, target:CGPoint) {

@@ -10,13 +10,16 @@ import SpriteKit
 
 class GameScene: SKScene {
   var ball = Ball()
+  var player = Player(id:0)
 
   override func didMoveToView(view: SKView) {
     /* Setup your scene here */
       //ball = Ball()
       ball.sprite.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame))
+      player.sprite.position = CGPoint(x:200, y:200)
 
       self.addChild(ball.sprite)
+      self.addChild(player.sprite)
   }
   
   override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
