@@ -9,14 +9,14 @@
 import SpriteKit
 
 class GameScene: SKScene {
+  var ball = Ball()
+
   override func didMoveToView(view: SKView) {
     /* Setup your scene here */
-    let myLabel = SKLabelNode(fontNamed:"Chalkduster")
-    myLabel.text = "Hello, World!";
-    myLabel.fontSize = 65;
-    myLabel.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame));
-    
-    self.addChild(myLabel)
+      //ball = Ball()
+      ball.sprite.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame))
+
+      self.addChild(ball.sprite)
   }
   
   override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
@@ -25,17 +25,16 @@ class GameScene: SKScene {
     for touch: AnyObject in touches {
       let location = touch.locationInNode(self)
       
-      let sprite = SKSpriteNode(imageNamed:"Spaceship")
+      //let sprite = SKSpriteNode(imageNamed:"Spaceship")
       
-      sprite.xScale = 0.5
-      sprite.yScale = 0.5
-      sprite.position = location
+      //sprite.xScale = 0.5
+      //sprite.yScale = 0.5
+      //sprite.position = location
       
-      let action = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
+      //let action = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
       
-      sprite.runAction(SKAction.repeatActionForever(action))
-      
-      self.addChild(sprite)
+      //sprite.runAction(SKAction.repeatActionForever(action))
+      ball.kick(100, target: location)
     }
   }
    
