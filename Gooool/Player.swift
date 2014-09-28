@@ -95,6 +95,10 @@ class Player {
     }
   }
   
+  func reset() {
+    
+  }
+  
   // Global run method to do the simulation of the player
   func update(currentTime: CFTimeInterval, ball: Ball, players: Array<Player>) {
     // If previous action is not done yet

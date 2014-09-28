@@ -36,6 +36,11 @@ class Ball {
     //let magnitude = (direction.dx
     sprite.physicsBody?.applyForce(direction)
   }
+  
+  func reset(startingPlayerIndex: Int) {
+    possessedBy = startingPlayerIndex
+    // reset the ball state
+  }
 
   func normalize(vector:CGVector) -> CGVector {
     let magnitude = sqrt(vector.dx * vector.dx + vector.dy * vector.dy)

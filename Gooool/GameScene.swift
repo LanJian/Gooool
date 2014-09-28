@@ -9,17 +9,11 @@
 import SpriteKit
 
 class GameScene: SKScene {
-  var ball = Ball()
-  var player = Player(id:0)
-
+  let gameSystem = GameSystem(teamSize: 3)
+  
   override func didMoveToView(view: SKView) {
     /* Setup your scene here */
-      //ball = Ball()
-      ball.sprite.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame))
-      player.sprite.position = CGPoint(x:200, y:200)
-
-      self.addChild(ball.sprite)
-      self.addChild(player.sprite)
+    gameSystem.start(self)
   }
   
   override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
@@ -27,7 +21,6 @@ class GameScene: SKScene {
     
     for touch: AnyObject in touches {
       let location = touch.locationInNode(self)
-      
       //let sprite = SKSpriteNode(imageNamed:"Spaceship")
       
       //sprite.xScale = 0.5
@@ -37,11 +30,12 @@ class GameScene: SKScene {
       //let action = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
       
       //sprite.runAction(SKAction.repeatActionForever(action))
-      ball.kick(100, target: location)
+      //ball.kick(100, target: location)
     }
   }
    
   override func update(currentTime: CFTimeInterval) {
     /* Called before each frame is rendered */
+    gameSystem.update(currentTime)
   }
 }
